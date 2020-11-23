@@ -39,19 +39,8 @@ module Portal
 
         unless registered_test_device
           new_device_registered = true
-          allDevicesiOSDevices = device_client.all(mac: false, include_disabled: true) || [] 
-          expectediOSDevice = allDevicesiOSDevices.select { |device| device['device_identifier'] == test_device.udid }
-          isMac = false
-          if expectediOSDevice.empty? 
-            allDevices = device_client.all(mac: true, include_disabled: true) || [] 
-            expectedDevice = allDevices.select { |device| device['device_identifier'] == test_device.udid }
-            isMac = !expectedDevice.empty?
-            print isMac.inspect
-          end
-          print expectedDevice.inspect
-          print isMac.inspect
           begin
-            registered_test_device = device_client.create!(name: test_device.name, udid: test_device.udid, mac: isMac)
+            registered_test_device = device_client.create!(name: test_device.name, udid: test_device.udid, mac: true)
           rescue Spaceship::Client::UnexpectedResponse => ex
             message = result_string(ex)
             raise ex unless message
